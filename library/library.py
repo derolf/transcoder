@@ -13,6 +13,10 @@ uniqueLock = Lock();
 counter = 0
 
 
+def utf8(s):
+    return s.encode("UTF-8")
+
+
 def unique():
     global uniqueLock
     global counter
@@ -42,7 +46,7 @@ def mapPath(path):
 
 def indexFile(path):
     d = mapPath(path)
-    key = "cache/" + hashlib.md5(path.encode("utf-8", "surrogateescape")).hexdigest() + ".meta"
+    key = "cache/" + hashlib.md5(utf8(path)).hexdigest() + ".meta"
 
     t = os.path.getmtime(d)
 
@@ -92,7 +96,7 @@ def extractFrameAsJPG(d, start):
 
 
 def icon(path):
-    key = "cache/" + hashlib.md5(path.encode("utf-8", "surrogateescape")).hexdigest() + ".icon"
+    key = "cache/" + hashlib.md5(utf8(path)).hexdigest() + ".icon"
 
     d = mapPath(path)
     t = os.path.getmtime(d)
@@ -159,11 +163,11 @@ def libraryMeta(path, details):
         meta["file"] = file
 
         if file:
-            meta.update({"media": config.transcoder + urllib.parse.quote(path.encode("UTF-8", "surrogateescape")), "file": True})
+            meta.update({"media": config.transcoder + urllib.parse.quote(utf8(path)), "file": True})
             if details:
                 meta.update(indexFile(path))
 
-    meta["icon"] = config.transcoder + urllib.parse.quote(path.encode("UTF-8", "surrogateescape")) + ".icon"
+    meta["icon"] = config.transcoder + urllib.parse.quote(utf8(path)) + ".icon"
     meta["path"] = path
 
     rslash = path.rsplit("/", 1)
