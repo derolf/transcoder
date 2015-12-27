@@ -1,7 +1,8 @@
 'use strict';
 
 // var library = "http://10.223.49.237:8124/library/";
-var library = "http://localhost:8124/library/";
+//var library = "http://localhost:8124/library/";
+var library = "/library/";
 
 var player = {
     duration: 0,
