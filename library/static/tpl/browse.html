@@ -1,0 +1,18 @@
+{{#hasParent}}
+<div class="tile folder" href="{{ parent }}">
+	<div class="img" style="top: 0%; left: 0%"></div>
+	<div class="cap">..</div>
+</div>
+{{/hasParent}} {{#items}} {{#file}}
+<div class="tile item" href="{{ path }}">
+    <div class="img"
+        style="background-image: url({{ icon }}); top: 0%; left: 0%"></div>
+	<div class="cap">{{ name }}</div>
+</div>
+{{/file}} {{^file}}
+<div class="tile folder" href="{{ path }}">
+	<div class="img"
+		style="background-image: url({{ icon }}); top: 0%; left: 0%"></div>
+	<div class="cap">{{ name }}</div>
+</div>
+{{/file}} {{/items}}

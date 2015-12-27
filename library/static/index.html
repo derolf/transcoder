@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>aidem</title>
+
+		<script type="text/javascript" language="javascript" src="$MANAGER_WIDGET/Common/API/Widget.js"></script>
+		<script type="text/javascript" language="javascript" src="$MANAGER_WIDGET/Common/API/TVKeyValue.js"></script>
+
+		<script type="text/javascript" language="javascript" src="lib/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" language="javascript" src="lib/jquery.scrollIntoView.js"></script>
+		<script type="text/javascript" language="javascript" src="lib/handlebars.js"></script>
+	
+		<script language="javascript" type="text/javascript" src="js/app.js"></script>
+
+		<link rel="stylesheet" href="css/app.css" type="text/css">
+
+	</head>
+
+	<body onload="main.onLoad();" onunload="main.onUnload();" onkeydown="main.keyDown();">
+		<video id="video" onended="player.videoEnded();" ontimeupdate="player.videoTimeUpdate();"></video>
+		<div id="browse"></div>
+		<div id="playlist"></div>
+        <div id="status"></div>
+	</body>
+</html>

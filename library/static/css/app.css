@@ -1,0 +1,163 @@
+/* app css stylesheet */
+
+body {
+	#background: rgba(64, 128, 255, 1.0);
+	background: #000;
+	color: #FFF;
+	overflow: hidden;
+	position: absolute;
+	padding: 0px;
+	margin: 0px;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+html {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+
+a:link { color:white; text-decoration:none; }
+a:visited { color:white; text-decoration:none; }
+a:focus { color:red; text-decoration:underline; }
+a:hover { color:green; text-decoration:none; }
+a:active { color:white; text-decoration:none; }
+
+
+.tile {
+	float: left; 
+	position:relative; 
+	width:20em; 
+	padding-bottom: 20em;
+	margin: 10px;
+	border: 2px solid black;
+}
+
+div .sel {
+	border: 2px solid white;
+}
+
+
+.tile > .img4 {
+	position: absolute;
+	background: #00F;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	width: 50%;
+	height: 50%
+}
+
+.tile > .img {
+	position: absolute;
+	background: #00F;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	width: 100%;
+	height: 100%
+}
+
+.tile > .cap {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background: #000;
+	background: rgba(0, 0, 0, 0.5);
+	padding: 10px;
+	text-align: center;
+}
+
+#status {
+    padding: 10px;
+    margin: 5px 10px 10px 10px;
+	bottom: 0px;
+	height: 50px;
+    left: 0px;
+	right: 0px;
+	position: absolute;
+    background: rgba(64, 128, 128, 0.9);
+    color: black;
+}
+
+#status > .position {
+    padding: inherit;
+    font-weight: bold;
+	height: 10px;
+	top: 0px;
+    left: 0px;
+	width: 200px;
+	position: absolute;
+}
+
+
+#status > .title {
+    padding: inherit;
+    top: 0px;
+	height: 20px;
+    left: 200px;
+	right: 0px;
+	font-weight: bold;
+	position: absolute;
+}
+
+#status > .next {
+    padding: inherit;
+    top: 20px;
+    height: 20px;
+    left: 200px;
+	right: 0px;
+	position: absolute;
+}
+
+#browse {
+    margin: 10px 5px 5px 10px;
+	top: 0px;
+	bottom: 85px;
+	left: 0px;
+	right: 25%;
+	position: absolute;
+	overflow-y: scroll;
+	background: rgba(64, 128, 255, 0.9);
+}
+
+#video {
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+	position: absolute;
+}
+
+#playlist {
+    margin: 10px 10px 5px 5px;
+    padding: 10px;
+	top: 0px;
+	bottom: 85px;
+	left: 75%;
+	right: 0px;
+	position: absolute;
+	overflow-y: scroll;
+    background: rgba(64, 128, 255, 0.9);
+    color : #FFF;
+}
+
+#playlist > div {
+    margin: 5px 0px 0px 0px;
+}
+
+#playlist .file {
+    color : #FFF;
+}
+
+#playlist .folder {
+    color : #FF0;
+}

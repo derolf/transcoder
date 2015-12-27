@@ -1,7 +1,7 @@
-This is a simple PYTHON / FLASK / FFMPEG / VIDEOJS based on-the-fly transcoding service with pseudostreaming support
+MEDIA TRANSCODER / MEDIA LIBRARY
 
-The VideoJS player object is hacked a bit to support pseudostreaming.
+This is a simple PYTHON / FLASK / FFMPEG / VIDEOJS based media library and on-the-fly transcoding server and frontend. It allows frontends to use the transcoder (probably even sitting on another machine). The VideoJS player object is hacked a bit to support pseudostreaming.
 
-* start ./start.sh
-* navigate to http://localhost:8123
-* play and seek
+* start ./library.sh
+* navigate to http://localhost:8124
+* have fun
