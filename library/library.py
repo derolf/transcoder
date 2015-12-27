@@ -42,7 +42,7 @@ def mapPath(path):
 
 def indexFile(path):
     d = mapPath(path)
-    key = "cache/" + hashlib.md5(path.encode("utf-8")).hexdigest() + ".meta"
+    key = "cache/" + hashlib.md5(path.encode("utf-8", "surrogateescape")).hexdigest() + ".meta"
 
     t = os.path.getmtime(d)
 
@@ -92,7 +92,7 @@ def extractFrameAsJPG(d, start):
 
 
 def icon(path):
-    key = "cache/" + hashlib.md5(path.encode("utf-8")).hexdigest() + ".icon"
+    key = "cache/" + hashlib.md5(path.encode("utf-8", "surrogateescape")).hexdigest() + ".icon"
 
     d = mapPath(path)
     t = os.path.getmtime(d)
@@ -159,11 +159,11 @@ def libraryMeta(path, details):
         meta["file"] = file
 
         if file:
-            meta.update({"media": config.transcoder + urllib.parse.quote(path.encode("UTF-8")), "file": True})
+            meta.update({"media": config.transcoder + urllib.parse.quote(path.encode("UTF-8", "surrogateescape")), "file": True})
             if details:
                 meta.update(indexFile(path))
 
-    meta["icon"] = config.transcoder + urllib.parse.quote(path.encode("UTF-8")) + ".icon"
+    meta["icon"] = config.transcoder + urllib.parse.quote(path.encode("UTF-8", "surrogateescape")) + ".icon"
     meta["path"] = path
 
     rslash = path.rsplit("/", 1)
