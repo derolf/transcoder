@@ -11,6 +11,8 @@ except NameError:
 
 
 def init(app):
+    L.init()
+
     @app.route('/wakeTranscoder')
     def wakeTranscoder():
         wol.send_magic_packet(C.transcoderMac)

@@ -1,6 +1,7 @@
 cacheVersion = 4
 
 from awake import wol
+import threading
 import os, subprocess, re
 import config
 import hashlib
@@ -96,6 +97,17 @@ def extractFrameAsJPG(d, start):
 
 
 def icon(path):
+    infile = iconFile(path)
+    try:
+        byte = infile.read(65536)
+        while byte:
+            yield byte
+            byte = infile.read(65536)
+    finally:
+        infile.close()
+
+
+def iconFile(path):
     key = "cache/" + hashlib.md5(utf8(path)).hexdigest() + ".icon"
 
     d = mapPath(path)
@@ -103,14 +115,10 @@ def icon(path):
 
     while True:
         try:
-            with open(key, 'rb') as infile:
-                meta = pickle.load(infile)
-                if meta["path"] == path and meta["time"] == t and meta["cacheVersion"] == cacheVersion:
-                    byte = infile.read(65536)
-                    while byte:
-                        yield byte
-                        byte = infile.read(65536)
-                    return
+            infile = open(key, 'rb')
+            meta = pickle.load(infile)
+            if meta["path"] == path and meta["time"] == t and meta["cacheVersion"] == cacheVersion:
+                return infile
         except:
             pass
 
@@ -133,22 +141,20 @@ def icon(path):
                 for f in os.listdir(d):
                     if not os.path.isfile(f):
                         empty = True
-                        for byte in icon(path + "/" + f):
-                            empty = False
-                            yield byte
-                    if not empty:
-                        return
+                        sub = iconFile(path + "/" + f)
+                        if len(sub.peek(1)) > 0:
+                            return sub
 
         meta = {"path": path, "time": t, "cacheVersion": cacheVersion}
         tkey = key + ".$" + str(unique())
         with open(tkey, 'wb') as outfile:
             pickle.dump(meta, outfile)
+            print("Creating icon for " + path)
             for byte in extractFrameAsJPG(d, 0.1 * getDuration(path)):
                 outfile.write(byte)
 
         os.rename(tkey, key)
 
-    return
 
 def libraryMeta(path, details):
     meta = dict()
@@ -263,3 +269,26 @@ def transcode(path, start):
             byte = f.read(65536)
     finally:
         proc.kill()
+
+
+def refreshLoop():
+    def refresh(path):
+        iconFile(path).close()
+        entry = library(path)
+        if not entry["file"]:
+            for child in entry["items"]:
+                refresh(child["path"])
+
+    while True:
+        print("Refreshing")
+        items = []
+        for item in config.root_items:
+            refresh(item["name"])
+        print("Refresh done")
+
+        time.sleep(3600)
+
+def init():
+    t = threading.Thread(target=refreshLoop)
+    t.daemon = True # stop if the program exits
+    t.start()

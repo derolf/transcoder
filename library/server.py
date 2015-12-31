@@ -11,4 +11,4 @@ app = Flask(__name__)
 restlibrary.init( app )
 web.init( app )
 
-app.run( host="0.0.0.0",port=C.port, threaded=True, debug=True )
+app.run( host="0.0.0.0",port=C.port, threaded=True, debug=False )
