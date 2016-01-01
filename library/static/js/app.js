@@ -296,6 +296,7 @@ var playlist = {
 	},
 
 	render : function() {
+	    var that = this;
 	    var context = {list: new Array()};
 	    var prevItem = null;
 	    for (var i= 0; i < this.list.length; i++) {
@@ -321,6 +322,13 @@ var playlist = {
 	    }
 		var r = tplPlaylist(context);
 		$('#playlist').html(r);
+		$('.playlistItem').on("click", function() {
+		    var index = $(this).attr("href");
+		    if (index >= 0) {
+			    that.set(index);
+			    that.play(false);
+            }
+		});
 		var cur = $('#playlist [href="'+this.current+'"]');
 		cur.addClass("sel");
 		if (cur[0]) cur.scrollIntoView();
@@ -339,6 +347,16 @@ function browse(url) {
 			data.parent = url.substring(0, url.lastIndexOf('/'));
 		var r = tplBrowse(data);
 		$('#browse').html(r);
+        $("#browse .item .img").on("click", function() {
+            playlist.add($(this).parent().attr("href"), -1, true);
+        });
+        $("#browse .folder .img").on("click", function() {
+            browse($(this).parent().attr("href"));
+        });
+        $("#browse .folder .play").on("click", function() {
+            playlist.add($(this).parent().attr("href"), -1, true);
+        });
+
 		$(".tile:first").addClass("sel");
 	}).fail(function() {
 		browse("");

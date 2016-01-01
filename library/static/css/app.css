@@ -72,6 +72,18 @@ div .sel {
 	text-align: center;
 }
 
+.tile > .play {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	background: #000;
+	background: rgba(0, 0, 0, 0.5);
+	padding: 10px;
+	text-align: center;
+}
+
+
 #status {
     padding: 10px;
     margin: 5px 10px 10px 10px;
