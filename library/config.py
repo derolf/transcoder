@@ -8,8 +8,8 @@ root_items=		[ { "name": "Children", "target": "Children" }, { "name": "Parents"
 media_folder= 	"/mnt/stuff/Public/"
 root_items=		[ { "name": "Eltern", "target": "Shared Videos/Videos/Eltern" }, { "name": "Kinder", "target": "Shared Videos/Videos/Kinder" }, { "name": "Music", "target": "Shared Music" }, {"name": "Test Music", "target": "/home/daniel/Music"} ]
 
-#media_folder= 	"/mnt/Public/"
-#root_items=		[ { "name": "Eltern", "target": "Shared Videos/Videos/Eltern" }, { "name": "Kinder", "target": "Shared Videos/Videos/Kinder" }, { "name": "Music", "target": "Shared Music" } ]
+media_folder= 	"/mnt/Public/"
+root_items=		[ { "name": "Eltern", "target": "Shared Videos/Videos/Eltern" }, { "name": "Kinder", "target": "Shared Videos/Videos/Kinder" }, { "name": "Music", "target": "Shared Music" } ]
 
 
 #transcoder=	"http://192.168.178.52:8123/media/"

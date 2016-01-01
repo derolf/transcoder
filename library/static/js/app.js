@@ -377,6 +377,11 @@ $.get("tpl/status.html").success(function(data) {
 
 $(function() {
 	browse(localStorage.getItem("browse.url") || "");
+    $("#status,#video").on("click", function() {
+        $("#browse").fadeToggle(200);
+        $("#playlist").fadeToggle(200);
+        $("#status").fadeToggle(200);
+    });
 });
 
 var keyboard = {
