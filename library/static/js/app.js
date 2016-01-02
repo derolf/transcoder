@@ -348,12 +348,18 @@ function browse(url) {
 		var r = tplBrowse(data);
 		$('#browse').html(r);
         $("#browse .item .img").on("click", function() {
+    		$("#browse .sel").removeClass("sel");
+    		$(this).parent().addClass("sel");
             playlist.add($(this).parent().attr("href"), -1, true);
         });
         $("#browse .folder .img").on("click", function() {
+    		$("#browse .sel").removeClass("sel");
+    		$(this).parent().addClass("sel");
             browse($(this).parent().attr("href"));
         });
         $("#browse .folder .play").on("click", function() {
+    		$("#browse .sel").removeClass("sel");
+    		$(this).parent().addClass("sel");
             playlist.add($(this).parent().attr("href"), -1, true);
         });
 
@@ -377,10 +383,8 @@ $.get("tpl/status.html").success(function(data) {
 
 $(function() {
 	browse(localStorage.getItem("browse.url") || "");
-    $("#status,#video").on("click", function() {
-        $("#browse").fadeToggle(200);
-        $("#playlist").fadeToggle(200);
-        $("#status").fadeToggle(200);
+    $("#video").on("click", function() {
+        keyboard.keyDown(84);
     });
 });
 
@@ -397,6 +401,7 @@ var keyboard = {
 		    $("#browse").fadeToggle(200);
 		    $("#playlist").fadeToggle(200);
 		    $("#status").fadeToggle(200);
+            $("#videoBox").toggleClass("videoBoxSmall");
 		    break;
 		case 37:
 			console.log("LEFT");

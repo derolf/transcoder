@@ -18,7 +18,7 @@
 	</head>
 
 	<body onload="main.onLoad();" onunload="main.onUnload();" onkeydown="main.keyDown();">
-		<video id="video" onended="player.videoEnded();" ontimeupdate="player.videoTimeUpdate();"></video>
+		<div id="videoBox" class="videoBoxSmall"><video id="video" onended="player.videoEnded();" ontimeupdate="player.videoTimeUpdate();"></video></div>
 		<div id="browse"></div>
 		<div id="playlist"></div>
         <div id="status"></div>

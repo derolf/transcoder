@@ -137,6 +137,17 @@ div .sel {
 	background: rgba(64, 128, 255, 0.9);
 }
 
+.videoBoxSmall {
+    margin: 5px 10px 5px 5px;
+	height: 150px;
+	bottom: 85px;
+	left: 75%;
+	right: 0px;
+	position: absolute;
+    background: rgba(64, 128, 255, 0.9);
+    color : #FFF;
+}
+
 #video {
 	top: 0px;
 	bottom: 0px;
@@ -153,7 +164,7 @@ div .sel {
     margin: 10px 10px 5px 5px;
     padding: 10px;
 	top: 0px;
-	bottom: 85px;
+	bottom: 245px;
 	left: 75%;
 	right: 0px;
 	position: absolute;
