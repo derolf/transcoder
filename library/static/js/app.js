@@ -426,7 +426,7 @@ var keyboard = {
 		case 38:
 			console.log("UP");
 			var cur = $("#browse .sel");
-			var prev = cur.prev().prev().prev().prev().prev();
+			var prev = cur.prev().prev().prev().prev();
 			if (prev.length) {
 				cur.removeClass("sel");
 				prev.addClass("sel");
@@ -436,7 +436,7 @@ var keyboard = {
 		case 40:
 			console.log("DOWN");
 			var cur = $("#browse .sel");
-			var next = cur.next().next().next().next().next();
+			var next = cur.next().next().next().next();
 			if (next.length) {
 				cur.removeClass("sel");
 				next.addClass("sel");

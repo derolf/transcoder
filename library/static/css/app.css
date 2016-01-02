@@ -30,8 +30,8 @@ a:active { color:white; text-decoration:none; }
 .tile {
 	float: left; 
 	position:relative; 
-	width:20em; 
-	padding-bottom: 20em;
+	height:25%;
+	width:22%;
 	margin: 10px;
 	border: 2px solid black;
 }
