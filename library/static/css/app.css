@@ -1,5 +1,14 @@
 /* app css stylesheet */
 
+* {
+  	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
 body {
 	#background: rgba(64, 128, 255, 1.0);
 	background: #000;
@@ -26,29 +35,25 @@ a:focus { color:red; text-decoration:underline; }
 a:hover { color:green; text-decoration:none; }
 a:active { color:white; text-decoration:none; }
 
-
-.tile {
-	float: left; 
-	position:relative; 
-	height:25%;
-	width:22%;
-	margin: 10px;
-	border: 2px solid black;
-}
-
 div .sel {
 	border: 2px solid white;
 }
 
 
-.tile > .img4 {
-	position: absolute;
-	background: #00F;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
-	width: 50%;
-	height: 50%
+.tileBox {
+	position: relative;
+	float: left;
+	height: 25%;
+	width: 25%;
+}
+
+.tile {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+	border: 2px solid black;
 }
 
 .tile > .img {
@@ -83,72 +88,135 @@ div .sel {
 	text-align: center;
 }
 
-
-#status {
-    padding: 10px;
-    margin: 5px 10px 10px 10px;
+#statusPlaceholder {
+	position: absolute;
+    margin: 1px 2px 2px 2px;
 	bottom: 0px;
 	height: 50px;
-    left: 0px;
 	right: 0px;
+    left: 0px;
+    opacity: 0;
+}
+
+
+#status {
 	position: absolute;
-    background: rgba(64, 128, 128, 0.9);
+    margin: 1px 2px 2px 2px;
+    padding: 10px;
+	bottom: 0px;
+	height: 50px;
+	right: 0px;
+    left: 0px;
+    background: rgba(64, 128, 255, 0.9);
     color: black;
 }
 
-#status > .position {
-    padding: inherit;
+#statusInner {
+    position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+#position {
     font-weight: bold;
-	height: 10px;
-	top: 0px;
-    left: 0px;
-	width: 200px;
-	position: absolute;
-}
-
-
-#status > .title {
-    padding: inherit;
-    top: 0px;
 	height: 20px;
-    left: 200px;
-	right: 0px;
-	font-weight: bold;
+	top: 30px;
+    left: 0px;
+	width: 100px;
 	position: absolute;
 }
 
-#status > .next {
-    padding: inherit;
-    top: 20px;
+#duration {
+    font-weight: bold;
+	height: 20px;
+	top: 30px;
+    right: 216px;
+	width: 100px;
+	text-align: right;
+	position: absolute;
+}
+
+#positionSliderBox {
+	position: absolute;
+    left: 0px;
+    right: 216px;
+    top: 0px;
     height: 20px;
-    left: 200px;
-	right: 0px;
-	position: absolute;
 }
 
-#browse {
-    margin: 10px 5px 5px 10px;
+#positionSlider {
+    left: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+#controls {
+    position: absolute;
+    height: 50px;
+    right: 0px;
+    top: 0px;
+    width: 208px;
+}
+
+#controls > div {
+	position: relative;
+	float: left;
+	margin: 0px 0px 0px 2px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 30px;
+    font-weight: bold;
+    background: grey;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#title {
+	position: absolute;
+    top: 30px;
+	height: 20px;
+    left: 100px;
+	right: 316px;
+	font-weight: bold;
+}
+
+#browsePlaceholder {
+	position: absolute;
+    margin: 2px 1px 1px 2px;
 	top: 0px;
 	bottom: 85px;
 	left: 0px;
 	right: 25%;
+	opacity: 0;
+}
+
+#browse {
+    margin: 2px 1px 1px 2px;
+    padding: 10px;
+	top: 0px;
+	bottom: 73px;
+	left: 0px;
+	right: 25%;
 	position: absolute;
 	overflow-y: scroll;
+	overflow-x: hidden;
 	background: rgba(64, 128, 255, 0.9);
 }
 
 .videoBoxSmall {
-    margin: 5px 10px 5px 5px;
-	height: 150px;
-	bottom: 85px;
+	position: absolute;
+    margin: 1px 2px 1px 1px;
+	height: 162px;
+	bottom: 73px;
 	left: 75%;
 	right: 0px;
-	position: absolute;
     background: rgba(64, 128, 255, 0.9);
     color : #FFF;
 }
 
 #video {
+	position: absolute;
 	top: 0px;
 	bottom: 0px;
 	left: 0px;
@@ -157,17 +225,27 @@ div .sel {
     height: 100%;
     max-width: 100%;
     max-height: 100%;
-	position: absolute;
 }
 
-#playlist {
-    margin: 10px 10px 5px 5px;
-    padding: 10px;
+#playlistPlaceholder {
+	position: absolute;
+    margin: 2px 2px 1px 1px;
 	top: 0px;
-	bottom: 245px;
+	bottom: 237px;
 	left: 75%;
 	right: 0px;
+	opacity: 0;
+}
+
+
+#playlist {
 	position: absolute;
+    margin: 2px 2px 1px 1px;
+    padding: 10px;
+	top: 0px;
+	bottom: 237px;
+	left: 75%;
+	right: 0px;
 	overflow-y: scroll;
     background: rgba(64, 128, 255, 0.9);
     color : #FFF;

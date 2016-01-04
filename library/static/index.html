@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>aidem</title>
 
 		<script type="text/javascript" language="javascript" src="$MANAGER_WIDGET/Common/API/Widget.js"></script>
@@ -10,17 +11,37 @@
 		<script type="text/javascript" language="javascript" src="lib/jquery-1.9.1.min.js"></script>
 		<script type="text/javascript" language="javascript" src="lib/jquery.scrollIntoView.js"></script>
 		<script type="text/javascript" language="javascript" src="lib/handlebars.js"></script>
-	
+
+        <script language="javascript" type="text/javascript" src="js/player.js"></script>
+        <script language="javascript" type="text/javascript" src="js/playlist.js"></script>
+        <script language="javascript" type="text/javascript" src="js/browser.js"></script>
 		<script language="javascript" type="text/javascript" src="js/app.js"></script>
 
 		<link rel="stylesheet" href="css/app.css" type="text/css">
-
 	</head>
 
 	<body onload="main.onLoad();" onunload="main.onUnload();" onkeydown="main.keyDown();">
-		<div id="videoBox" class="videoBoxSmall"><video id="video" onended="player.videoEnded();" ontimeupdate="player.videoTimeUpdate();"></video></div>
+		<div id="videoBox" class="videoBoxSmall"><video id="video" onended="player.videoEnded();"></video></div>
+        <div id="browsePlaceholder"></div>
+        <div id="playlistPlaceholder"></div>
+        <div id="statusPlaceholder"></div>
 		<div id="browse"></div>
 		<div id="playlist"></div>
-        <div id="status"></div>
+        <div id="status">
+			<div id="statusInner">
+				<div id="position"></div>
+				<div id="duration"></div>
+				<div id="title"></div>
+				<div id="positionSliderBox">
+					<input type="range" id="positionSlider"/>
+				</div>
+                <div id="controls">
+                    <div id="rwButton">&#x23ea;</div>
+                    <div id="playButton"></div>
+                    <div id="ffButton">&#x23e9;</div>
+                    <div id="stopButton">&#x23f9;</div>
+                </div>
+			</div>
+		</div>
 	</body>
 </html>
