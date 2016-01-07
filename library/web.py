@@ -1,23 +1,22 @@
 from flask import Flask, request, Response, abort, send_file
-import library as L
 import os
-from jinja2 import Environment, PackageLoader
 
-staticfolder= os.path.join( os.path.dirname( __file__ ), "static" )
+staticfolder = os.path.join(os.path.dirname(__file__), "static")
+
 
 def parentPath(path):
-	path= path.split( "/" )
-	path.pop()
-	path= os.path.join( *path ) if len(path) > 0 else ""
-	print( path )
-	return path
+    path = path.split("/")
+    path.pop()
+    path = os.path.join(*path) if len(path) > 0 else ""
+    print(path)
+    return path
 
 
 def init(app):
-	@app.route("/",defaults={"path":"index.html"})
-	@app.route("/<path:path>")
-	def staticcontent( path ):
-		d= os.path.abspath( os.path.join( staticfolder, path ) )
-		if not os.path.isfile( d ): abort(404)
-		return send_file( d )
-	
+    @app.route("/", defaults={"path": "index.html"})
+    @app.route("/<path:path>")
+    def staticcontent(path):
+        d = os.path.abspath(os.path.join(staticfolder, path))
+        if not os.path.isfile(d):
+            abort(404)
+        return send_file(d)

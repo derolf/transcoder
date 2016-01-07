@@ -33,169 +33,137 @@ var keyboard = {
         }
     },
 
-	keyDown : function(keyCode) {
-		console.log("Key pressed:" + keyCode);
+	key : function(key) {
+		console.log("Key pressed:" + key);
 
-		switch (keyCode) {
-		case 27:
-			console.log("ESC");
-			break;
-		case 84:
-		    console.log("TEXT");
+		switch (key) {
+		case "t":
 		    this.setVideoMode(!this.videoMode);
 		    break;
-		case 37:
-			console.log("LEFT");
+		case "ArrowLeft":
 		    if ($("#browse").is(":visible"))
 			    browser.left();
 			break;
-		case 39:
-			console.log("RIGHT");
+		case "ArrowRight":
 			if ($("#browse").is(":visible"))
 			    browser.right();
 			break;
-		case 38:
-			console.log("UP");
+		case "ArrowUp":
 			if ($("#browse").is(":visible"))
 			    browser.up();
 			break;
-		case 40:
-			console.log("DOWN");
+		case "ArrowDown":
 			if ($("#browse").is(":visible"))
 			    browser.down();
 			break;
-		case 13:
-			console.log("ENTER");
+		case "Enter":
 			if ($("#browse").is(":visible")) {
                 if (browser.list[browser.current].file) browser.play();
                 else browser.go();
             }
 			break;
-		case 80:
-			console.log("PLAY");
+		case "p":
     		if ($("#browse").is(":visible"))
 	    		browser.play();
 			break;
-        case 82:
-            console.log("RW");
+        case "r":
 			player.seek(player.currentTime() - 30, 500);
 			break;
-		case 70:
-		    console.log("FF");
+		case "f":
 		    player.seek(player.currentTime() + 30, 500);
 			break;
-		case 187:
-			console.log("CH_UP");
+		case "+":
             playlist.playPrev(1000);
 			break;
-		case 189:
-			console.log("CH_DN");
+		case "-":
             playlist.playNext(1000);
 			break;
-		case 73:
+		case "i":
 			player.stop();
 			history.go(0);
 			break;
-		case 83:
-			console.log("STOP");
+		case "s":
 			playlist.stop();
 			break;
-		case 32:
-			console.log("PAUSE");
+		case " ":
 			player.pause(!player.paused);
 			break;
 		default:
-			console.log("Unhandled key");
-			break;
+		    console.log("unhandled");
+			return false;
 		}
+		return true;
 	}
 };
+
+function qs(key) {
+    key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
+    var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+}
 
 $(function() {
     keyboard.setVideoMode(false);
     $("#browsePlaceholder").on("click", function() {
-        console.log("click");
         keyboard.setVideoMode(false);
     });
+    var device = qs("device");
+    console.log("Detected device " + device);
+    switch (device) {
+    case "SamsungTV":
+        InitSamsungTVDevice();
+        break;
+    default:
+        InitDefaultDevice();
+        break;
+    }
 });
 
-function Samsung() {
-	var widgetAPI = new Common.API.Widget();
-	var tvKey = new Common.API.TVKeyValue();
-    return {
-        onLoad : function() {
-        },
+function InitSamsungTVDevice() {
+    console.log("Init Samsung");
 
-        onUnload : function() {
-        },
+    var keyMap = {};
 
-        keyDown : function() {
-            var keyCode = window.event.keyCode;
-            console.log("Key pressed: " + keyCode);
+    $(document).keydown(function(event) {
+        var keyCode = event.keyCode;
+        console.log("Key pressed: " + keyCode);
+        var key = keyMap[keyCode];
+        if (key && keyboard.key(key))
+            event.preventDefault();
+    });
 
-            switch (keyCode) {
-            case tvKey.KEY_RETURN:
-            case tvKey.KEY_PANEL_RETURN:
-                keyboard.keyDown(27);
-                break;
-            case tvKey.KEY_LEFT:
-                keyboard.keyDown(37);
-                break;
-            case tvKey.KEY_RIGHT:
-                keyboard.keyDown(39);
-                break;
-            case tvKey.KEY_UP:
-                keyboard.keyDown(38);
-                break;
-            case tvKey.KEY_DOWN:
-                keyboard.keyDown(40);
-                break;
-            case tvKey.KEY_ENTER:
-            case tvKey.KEY_PANEL_ENTER:
-                keyboard.keyDown(13);
-                break;
-            case tvKey.KEY_RW:
-                keyboard.keyDown(82);
-                break;
-            case tvKey.KEY_FF:
-                keyboard.keyDown(70);
-                break;
-            case tvKey.KEY_CH_UP:
-                keyboard.keyDown(187);
-                break;
-            case tvKey.KEY_CH_DOWN:
-                keyboard.keyDown(189);
-                break;
-            case tvKey.KEY_INFO:
-                keyboard.keyDown(73);
-                break;
-            case tvKey.KEY_STOP:
-                keyboard.keyDown(83);
-                break;
-            case tvKey.KEY_PAUSE:
-                keyboard.keyDown(32);
-                break;
-            default:
-                console.log("Unhandled key");
-                break;
-            }
-        }
-	}
+    $.getScript("$MANAGER_WIDGET/Common/API/TVKeyValue.js", function() {
+        console.log("$MANAGER_WIDGET/Common/API/TVKeyValue.js loaded");
+
+        var tvKey = new Common.API.TVKeyValue();
+
+        keyMap[tvKey.KEY_LEFT] = "ArrowLeft";
+        keyMap[tvKey.KEY_RIGHT] = "ArrowRight";
+        keyMap[tvKey.KEY_UP] = "ArrowUp";
+        keyMap[tvKey.KEY_DOWN] = "ArrowDown";
+        keyMap[tvKey.KEY_ENTER] = "Enter";
+        keyMap[tvKey.KEY_PANEL_ENTER] = "Enter";
+        keyMap[tvKey.KEY_RW] = "r";
+        keyMap[tvKey.KEY_FF] = "f";
+        keyMap[tvKey.KEY_CH_UP] = "+";
+        keyMap[tvKey.KEY_CH_DOWN] = "-";
+        keyMap[tvKey.KEY_INFO] = "i";
+        keyMap[tvKey.KEY_PLAY] = "p";
+        keyMap[tvKey.KEY_STOP] = "s";
+        keyMap[tvKey.KEY_PAUSE] = " ";
+    });
+
+    $.getScript("$MANAGER_WIDGET/Common/API/Widget.js", function() {
+        console.log("$MANAGER_WIDGET/Common/API/Widget.js loaded");
+
+        var widgetAPI = new Common.API.Widget();
+        widgetAPI.sendReadyEvent();
+    });
 };
 
-function Default() {
-    return {
-		onLoad : function() {
-		},
-
-		onUnload : function() {
-
-		},
-
-		keyDown : function() {
-			keyboard.keyDown(window.event.keyCode);
-		}
-	};
+function InitDefaultDevice() {
+    $(document).keydown(function(event) {
+        if (keyboard.key(event.key))
+            event.preventDefault();
+ 	});
 };
-
-var main = Default();

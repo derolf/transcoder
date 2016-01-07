@@ -42,7 +42,6 @@ var browser = {
         $('#browse').html(r);
 
         $("#browse .img").on("click", function() {
-            console.log($(this).parent());
             that.set(+$(this).parent().attr("href"));
             if (that.list[that.current].file) that.play();
             else that.go();

@@ -8,6 +8,14 @@ import restlibrary
 
 app = Flask(__name__)
 
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 300
+    response.cache_control.no_cache = True
+    response.cache_control.must_revalidate = True
+    response.cache_control.proxy_revalidate = True
+    return response
+
 restlibrary.init( app )
 web.init( app )
 
