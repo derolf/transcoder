@@ -165,7 +165,7 @@ $(function() {
 	    player.seek(+$(this).val(), 500);
 	});
     $("#video").on("click", function() {
-        keyboard.key("t"d);
+        keyboard.key("t");
     });
     $("#statusPlaceholder").click(function() {
         player.flashStatus();
