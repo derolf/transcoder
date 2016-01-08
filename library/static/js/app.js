@@ -151,6 +151,7 @@ function InitSamsungTVDevice() {
         keyMap[tvKey.KEY_PLAY] = "p";
         keyMap[tvKey.KEY_STOP] = "s";
         keyMap[tvKey.KEY_PAUSE] = " ";
+        keyMap[tvKey.KEY_GUIDE] = "t";
     });
 
     $.getScript("$MANAGER_WIDGET/Common/API/Widget.js", function() {
