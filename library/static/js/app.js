@@ -124,12 +124,33 @@ function InitSamsungTVDevice() {
 
     var keyMap = {};
 
+    $.getScript("$MANAGER_WIDGET/Common/webapi/1.0/deviceapis.js", function() {
+        console.log("$MANAGER_WIDGET/Common/webapi/1.0/deviceapis.js loaded");
+    });
+
     $(document).keydown(function(event) {
         var keyCode = event.keyCode;
         console.log("Key pressed: " + keyCode);
         var key = keyMap[keyCode];
-        if (key && keyboard.key(key))
-            event.preventDefault();
+        if (key) {
+            var handled = keyboard.key(key);
+            if (!handled) {
+                handled = true;
+                switch (key) {
+                case "VolumeUp":
+                    deviceapis.audiocontrol.setVolumeUp();
+                    break;
+                case "VolumeDown":
+                    deviceapis.audiocontrol.setVolumeDown();
+                    break;
+                default:
+                   handled = false;
+                   break;
+                }
+            }
+            if (handled)
+                event.preventDefault();
+        }
     });
 
     $.getScript("$MANAGER_WIDGET/Common/API/TVKeyValue.js", function() {
@@ -152,6 +173,11 @@ function InitSamsungTVDevice() {
         keyMap[tvKey.KEY_STOP] = "s";
         keyMap[tvKey.KEY_PAUSE] = " ";
         keyMap[tvKey.KEY_GUIDE] = "t";
+
+        keyMap[tvKey.KEY_VOL_UP] = "VolumeUp";
+        keyMap[tvKey.KEY_PANEL_VOL_UP] = "VolumeUp";
+        keyMap[tvKey.KEY_VOL_DOWN] = "VolumeDown";
+        keyMap[tvKey.KEY_PANEL_VOL_DOWN] = "VolumeDown";
     });
 
     $.getScript("$MANAGER_WIDGET/Common/API/Widget.js", function() {
@@ -168,3 +194,4 @@ function InitDefaultDevice() {
             event.preventDefault();
  	});
 };
+
