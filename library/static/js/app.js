@@ -119,44 +119,30 @@ $(function() {
     }
 });
 
+function loadObject(id, clsid) {
+    var obj = document.createElement("object");
+    obj.id = id;
+    obj.setAttribute("classid", clsid);
+    $("body").append(obj);
+    return obj;
+}
+
+
+
 function InitSamsungTVDevice() {
     console.log("Init Samsung");
 
-    var keyMap = {};
+    var NNavi = loadObject('pluginObjectNNavi', 'clsid:SAMSUNG-INFOLINK-NNAVI');
+    var TVMW = loadObject('pluginObjectTVMW', 'clsid:SAMSUNG-INFOLINK-TVMW');
 
-    $.getScript("$MANAGER_WIDGET/Common/webapi/1.0/deviceapis.js", function() {
-        console.log("$MANAGER_WIDGET/Common/webapi/1.0/deviceapis.js loaded");
-    });
-
-    $(document).keydown(function(event) {
-        var keyCode = event.keyCode;
-        console.log("Key pressed: " + keyCode);
-        var key = keyMap[keyCode];
-        if (key) {
-            var handled = keyboard.key(key);
-            if (!handled) {
-                handled = true;
-                switch (key) {
-                case "VolumeUp":
-                    deviceapis.audiocontrol.setVolumeUp();
-                    break;
-                case "VolumeDown":
-                    deviceapis.audiocontrol.setVolumeDown();
-                    break;
-                default:
-                   handled = false;
-                   break;
-                }
-            }
-            if (handled)
-                event.preventDefault();
-        }
-    });
+    NNavi.SetBannerState(1);
 
     $.getScript("$MANAGER_WIDGET/Common/API/TVKeyValue.js", function() {
         console.log("$MANAGER_WIDGET/Common/API/TVKeyValue.js loaded");
 
         var tvKey = new Common.API.TVKeyValue();
+
+        var keyMap = {};
 
         keyMap[tvKey.KEY_LEFT] = "ArrowLeft";
         keyMap[tvKey.KEY_RIGHT] = "ArrowRight";
@@ -178,6 +164,28 @@ function InitSamsungTVDevice() {
         keyMap[tvKey.KEY_PANEL_VOL_UP] = "VolumeUp";
         keyMap[tvKey.KEY_VOL_DOWN] = "VolumeDown";
         keyMap[tvKey.KEY_PANEL_VOL_DOWN] = "VolumeDown";
+
+        $(document).keydown(function(event) {
+            var keyCode = event.keyCode;
+            console.log("Key pressed: " + keyCode);
+            var key = keyMap[keyCode];
+            if (key && keyboard.key(key))
+                event.preventDefault();
+        });
+
+
+        $.getScript("$MANAGER_WIDGET/Common/API/Plugin.js", function() {
+            console.log("$MANAGER_WIDGET/Common/API/Plugin.js loaded");
+
+            var plugin = new Common.API.Plugin();
+
+            plugin.SetBannerState(1);
+
+            plugin.unregistKey(tvKey.KEY_VOL_UP);
+            plugin.unregistKey(tvKey.KEY_VOL_DOWN);
+            plugin.unregistKey(tvKey.KEY_MUTE);
+        });
+
     });
 
     $.getScript("$MANAGER_WIDGET/Common/API/Widget.js", function() {
