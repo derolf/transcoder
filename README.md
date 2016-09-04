@@ -1,10 +1,14 @@
-MEDIA TRANSCODER / MEDIA LIBRARY
+MEDIA TRANSCODER / MEDIA LIBRARY / MEDIA FRONTEND
 
-This is a simple PYTHON / FLASK / FFMPEG based media library and on-the-fly transcoding server and frontend. 
+This is a simple PYTHON / FLASK / FFMPEG based media library and on-the-fly transcoding server and HTML5-based frontend.
 
 WHY
 
 I am running this on my NAS and use my Samsung SmartTV or a browser to watch videos and listen to music.
+
+CONFIGURE
+
+Change config.py to point to your media files.
 
 INSTALL PYTHON 3.4
 
