@@ -1,5 +1,29 @@
 'use strict';
 
+$(function() {
+    app.init();
+});
+
+function loadObject(id, clsid) {
+    var obj = document.createElement("object");
+    obj.id = id;
+    obj.setAttribute("classid", clsid);
+    $("body").append(obj);
+    return obj;
+}
+
+if (!String.prototype.endsWith) {
+  String.prototype.endsWith = function(searchString, position) {
+      var subjectString = this.toString();
+      if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+        position = subjectString.length;
+      }
+      position -= searchString.length;
+      var lastIndex = subjectString.indexOf(searchString, position);
+      return lastIndex !== -1 && lastIndex === position;
+  };
+}
+
 // var library = "http://10.223.49.237:8124/library/";
 //var library = "http://localhost:8124/library/";
 var library = "/library/";
@@ -22,6 +46,7 @@ var keyboard = {
             $("#playlist").finish().fadeOut();
             $("#status").finish().fadeOut();
             $("#videoBox").removeClass("videoBoxSmall");
+            //$("#video").removeClass("videoSmall");
         } else {
             $("#status")[0].always = true;
             $("#playlist")[0].always = true;
@@ -30,6 +55,7 @@ var keyboard = {
             $("#playlist").finish().fadeIn();
             $("#status").finish().fadeIn();
             $("#videoBox").addClass("videoBoxSmall");
+            //$("#video").addClass("videoSmall");
         }
     },
 
@@ -102,104 +128,90 @@ function qs(key) {
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 }
 
-$(function() {
-    keyboard.setVideoMode(false);
-    $("#browsePlaceholder").on("click", function() {
+var app = {
+    keyMap : {},
+
+    init : function() {
+        var that = this;
+
         keyboard.setVideoMode(false);
-    });
-    var device = qs("device");
-    console.log("Detected device " + device);
-    switch (device) {
-    case "SamsungTV":
-        InitSamsungTVDevice();
-        break;
-    default:
-        InitDefaultDevice();
-        break;
-    }
-});
-
-function loadObject(id, clsid) {
-    var obj = document.createElement("object");
-    obj.id = id;
-    obj.setAttribute("classid", clsid);
-    $("body").append(obj);
-    return obj;
-}
-
-
-
-function InitSamsungTVDevice() {
-    console.log("Init Samsung");
-
-    var NNavi = loadObject('pluginObjectNNavi', 'clsid:SAMSUNG-INFOLINK-NNAVI');
-    var TVMW = loadObject('pluginObjectTVMW', 'clsid:SAMSUNG-INFOLINK-TVMW');
-
-    NNavi.SetBannerState(1);
-
-    $.getScript("$MANAGER_WIDGET/Common/API/TVKeyValue.js", function() {
-        console.log("$MANAGER_WIDGET/Common/API/TVKeyValue.js loaded");
-
-        var tvKey = new Common.API.TVKeyValue();
-
-        var keyMap = {};
-
-        keyMap[tvKey.KEY_LEFT] = "ArrowLeft";
-        keyMap[tvKey.KEY_RIGHT] = "ArrowRight";
-        keyMap[tvKey.KEY_UP] = "ArrowUp";
-        keyMap[tvKey.KEY_DOWN] = "ArrowDown";
-        keyMap[tvKey.KEY_ENTER] = "Enter";
-        keyMap[tvKey.KEY_PANEL_ENTER] = "Enter";
-        keyMap[tvKey.KEY_RW] = "r";
-        keyMap[tvKey.KEY_FF] = "f";
-        keyMap[tvKey.KEY_CH_UP] = "+";
-        keyMap[tvKey.KEY_CH_DOWN] = "-";
-        keyMap[tvKey.KEY_INFO] = "i";
-        keyMap[tvKey.KEY_PLAY] = "p";
-        keyMap[tvKey.KEY_STOP] = "s";
-        keyMap[tvKey.KEY_PAUSE] = " ";
-        keyMap[tvKey.KEY_GUIDE] = "t";
-
-        keyMap[tvKey.KEY_VOL_UP] = "VolumeUp";
-        keyMap[tvKey.KEY_PANEL_VOL_UP] = "VolumeUp";
-        keyMap[tvKey.KEY_VOL_DOWN] = "VolumeDown";
-        keyMap[tvKey.KEY_PANEL_VOL_DOWN] = "VolumeDown";
+        $("#browsePlaceholder").on("click", function() {
+            keyboard.setVideoMode(false);
+        });
 
         $(document).keydown(function(event) {
-            var keyCode = event.keyCode;
+            var keyCode = event.key || event.keyCode;
             console.log("Key pressed: " + keyCode);
-            var key = keyMap[keyCode];
-            if (key && keyboard.key(key))
+            var key = that.keyMap[keyCode] || keyCode;
+            if (keyboard.key(key))
                 event.preventDefault();
         });
 
+        this.initSamsungTVDevice();
+    },
 
-        $.getScript("$MANAGER_WIDGET/Common/API/Plugin.js", function() {
-            console.log("$MANAGER_WIDGET/Common/API/Plugin.js loaded");
+    initSamsungTVDevice : function() {
+        var that = this;
 
-            var plugin = new Common.API.Plugin();
+        console.log("Init Samsung");
 
-            plugin.SetBannerState(1);
+        var NNavi = loadObject('pluginObjectNNavi', 'clsid:SAMSUNG-INFOLINK-NNAVI');
+        var TVMW = loadObject('pluginObjectTVMW', 'clsid:SAMSUNG-INFOLINK-TVMW');
 
-            plugin.unregistKey(tvKey.KEY_VOL_UP);
-            plugin.unregistKey(tvKey.KEY_VOL_DOWN);
-            plugin.unregistKey(tvKey.KEY_MUTE);
+        NNavi.SetBannerState(1);
+
+        $.getScript("$MANAGER_WIDGET/Common/API/TVKeyValue.js", function() {
+            console.log("$MANAGER_WIDGET/Common/API/TVKeyValue.js loaded");
+
+            var tvKey = new Common.API.TVKeyValue();
+
+            var keyMap = that.keyMap;
+
+            keyMap[tvKey.KEY_LEFT] = "ArrowLeft";
+            keyMap[tvKey.KEY_RIGHT] = "ArrowRight";
+            keyMap[tvKey.KEY_UP] = "ArrowUp";
+            keyMap[tvKey.KEY_DOWN] = "ArrowDown";
+            keyMap[tvKey.KEY_ENTER] = "Enter";
+            keyMap[tvKey.KEY_PANEL_ENTER] = "Enter";
+            keyMap[tvKey.KEY_RW] = "r";
+            keyMap[tvKey.KEY_FF] = "f";
+            keyMap[tvKey.KEY_CH_UP] = "+";
+            keyMap[tvKey.KEY_CH_DOWN] = "-";
+            keyMap[tvKey.KEY_INFO] = "i";
+            keyMap[tvKey.KEY_PLAY] = "p";
+            keyMap[tvKey.KEY_STOP] = "s";
+            keyMap[tvKey.KEY_PAUSE] = " ";
+            keyMap[tvKey.KEY_GUIDE] = "t";
+            keyMap[tvKey.KEY_TTX_MIX] = "t";
+            keyMap[35] = "t";
+
+            keyMap[tvKey.KEY_VOL_UP] = "VolumeUp";
+            keyMap[tvKey.KEY_PANEL_VOL_UP] = "VolumeUp";
+            keyMap[tvKey.KEY_VOL_DOWN] = "VolumeDown";
+            keyMap[tvKey.KEY_PANEL_VOL_DOWN] = "VolumeDown";
+
+            $.getScript("$MANAGER_WIDGET/Common/API/Plugin.js", function() {
+                console.log("$MANAGER_WIDGET/Common/API/Plugin.js loaded");
+
+                var plugin = new Common.API.Plugin();
+
+                plugin.SetBannerState(1);
+
+                plugin.unregistKey(tvKey.KEY_VOL_UP);
+                plugin.unregistKey(tvKey.KEY_VOL_DOWN);
+                plugin.unregistKey(tvKey.KEY_MUTE);
+            });
+
         });
 
-    });
+        $.getScript("$MANAGER_WIDGET/Common/API/Widget.js", function() {
+            console.log("$MANAGER_WIDGET/Common/API/Widget.js loaded");
 
-    $.getScript("$MANAGER_WIDGET/Common/API/Widget.js", function() {
-        console.log("$MANAGER_WIDGET/Common/API/Widget.js loaded");
+            var widgetAPI = new Common.API.Widget();
+            widgetAPI.sendReadyEvent();
+        });
+    }
+}
 
-        var widgetAPI = new Common.API.Widget();
-        widgetAPI.sendReadyEvent();
-    });
-};
 
-function InitDefaultDevice() {
-    $(document).keydown(function(event) {
-        if (keyboard.key(event.key))
-            event.preventDefault();
- 	});
-};
 

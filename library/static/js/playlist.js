@@ -1,5 +1,9 @@
 'use strict';
 
+$(function() {
+    playlist.init();
+});
+
 var tplPlaylist;
 
 $.get("tpl/playlist.html").success(function(data) {
@@ -188,13 +192,14 @@ var playlist = {
 		var cur = $('#playlist [href="'+this.current+'"]');
 		cur.addClass("sel");
 		if (cur[0]) cur.scrollIntoView();
+	},
+
+	init : function() {
+        $("#playlistPlaceholder").click(function() {
+            $("#playlist").finish().fadeIn(200).animate({"null":1}, {duration: 2000, done: function(p, j) {
+                if (!j && !$(this)[0].always) $(this).fadeOut();
+            }});
+        });
 	}
 };
 
-$(function() {
-    $("#playlistPlaceholder").click(function() {
-        $("#playlist").finish().fadeIn(200).animate({"null":1}, {duration: 2000, done: function(p, j) {
-            if (!j && !$(this)[0].always) $(this).fadeOut();
-        }});
-    });
-});

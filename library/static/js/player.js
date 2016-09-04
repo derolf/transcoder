@@ -1,5 +1,9 @@
 'use strict';
 
+$(function() {
+    player.init();
+});
+
 function formatSeconds(seconds) {
     seconds = Math.floor(seconds);
     var minutes = Math.floor(seconds / 60);
@@ -91,7 +95,8 @@ var player = {
         var video = $("#video");
 
         if (data == null) {
-            video.attr("src", "");
+            //video.attr("src", "");
+            video.find("> source").remove();
             video.load();
             this.duration = 0;
             this.start = 0;
@@ -120,8 +125,6 @@ var player = {
 
                 this.start = start;
 
-                var url = data.media + ".tc?start=" + start;
-
                 this.paused = true;
                 video[0].pause();
                 this.consumed = 0;
@@ -130,9 +133,37 @@ var player = {
                 this.playDeferredHandle = setTimeout(function() {
                     that.playDeferredHandle = null;
 
-                    video.attr("src", url);
+                    video.find("> source").remove();
+
+                    function add(format, vcodec, acodec) {
+                        var src = document.createElement("source");
+                        src.setAttribute("src", data.media + "." + format + "?vcodec="  + vcodec + "&acodec=" + acodec + "&start=" + start);
+                        //src.setAttribute("type", "video/" + format + "; codecs=" + vcodec + "," + acodec);
+                        video.append(src);
+                        return src;
+                    }
+
+                    var last;
+
+                    if (data.media.endsWith(".mp3")) {
+                        add("mp3", "none", "copy");
+                        last = add("mp3", "none", "");
+                    } else {
+                        add("mp4", "copy", "copy");
+                        add("mp4", "copy", "");
+                        add("mp4", "", "copy");
+                        last = add("mp4", "", "");
+                    }
+
+                    $(last).on("ended", that.videoEnded);
+
+                    //var url = data.media + ".mp4?vcodec=copy&acodec=copy&start=" + start;
+                    //video.attr("src", url);
+
                     video.load();
                     video[0].play();
+
+                    //console.log(video[0].videoTracks);
 
                     that.unpauseTime = +new Date().getTime() / 1000;
                     that.paused = false;
@@ -152,34 +183,35 @@ var player = {
 
 	videoTimeUpdate : function() {
         $("#playButton").html(this.paused ? "&#x23f5" : "&#x23f8");
-        $("#position").text(formatSeconds(player.currentTime()));
-        $("#positionSlider").val(player.currentTime());
+        $("#position").text(formatSeconds(this.currentTime()));
+        $("#positionSlider").val(this.currentTime());
 	    if (!this.paused && this.currentTime() > this.duration + 1)
 	        this.videoEnded();
+	},
+	
+	init : function() {
+	    var that = this;
+        setInterval(function(){that.videoTimeUpdate();}, 500);
+        $("#positionSlider").on("input", function() {
+            that.seek(+$(this).val(), 500);
+        });
+        $("#video").on("click", function() {
+            keyboard.key("t");
+        });
+        $("#statusPlaceholder").click(function() {
+            that.flashStatus();
+        });
+        $("#playButton").click(function() {
+            that.pause(!that.paused);
+        });
+        $("#rwButton").click(function() {
+            that.seek(that.currentTime() - 30, 500);
+        });
+        $("#ffButton").click(function() {
+            that.seek(that.currentTime() + 30, 500);
+        });
+        $("#stopButton").click(function() {
+            that.stop();
+        });
 	}
 };
-
-$(function() {
-	setInterval(function(){player.videoTimeUpdate();}, 500);
-	$("#positionSlider").on("input", function() {
-	    player.seek(+$(this).val(), 500);
-	});
-    $("#video").on("click", function() {
-        keyboard.key("t");
-    });
-    $("#statusPlaceholder").click(function() {
-        player.flashStatus();
-    });
-    $("#playButton").click(function() {
-        player.pause(!player.paused);
-    });
-    $("#rwButton").click(function() {
-        player.seek(player.currentTime() - 30, 500);
-    });
-    $("#ffButton").click(function() {
-        player.seek(player.currentTime() + 30, 500);
-    });
-    $("#stopButton").click(function() {
-        playlist.stop();
-    });
-});

@@ -169,11 +169,11 @@ def libraryMeta(path, details):
         meta["file"] = file
 
         if file:
-            meta.update({"media": config.transcoder + urllib.parse.quote(utf8(path)), "file": True})
+            meta.update({"media": "/media/" + urllib.parse.quote(utf8(path)), "file": True})
             if details:
                 meta.update(indexFile(path))
 
-    meta["icon"] = config.transcoder + urllib.parse.quote(utf8(path)) + ".icon"
+    meta["icon"] = "/icon/" + urllib.parse.quote(utf8(path)) + ".jpg"
     meta["path"] = path
 
     rslash = path.rsplit("/", 1)
@@ -238,14 +238,11 @@ def getDuration(path):
     return duration
 
 
-def transcodeMime(path):
-    d = mapPath(path)
-    dummy, ext = os.path.splitext(d)
-    ext = ext[1:]
-    return config.transcode_mime.get(ext) or config.transcode_mime["*"]
+def transcodeMime(format):
+    return config.transcode_mime.get(format) or config.transcode_mime["*"]
 
 
-def transcode(path, start):
+def transcode(path, start, format, vcodec, acodec):
     d = mapPath(path)
     dummy, ext = os.path.splitext(d)
     ext = ext[1:]
@@ -253,10 +250,27 @@ def transcode(path, start):
     cmdline = list()
     cmdline.append(config.ffmpeg)
     cmdline.append("-ss")
-    cmdline.append(str(start));
+    cmdline.append(str(start))
     cmdline.append("-i")
-    cmdline.append(d);
-    cmdline.extend(args)
+    cmdline.append(d)
+    cmdline.append("-f")
+    cmdline.append(format)
+    if vcodec:
+        if vcodec == "none":
+            cmdline.append("-vn")
+        else:
+            cmdline.append("-vcodec")
+            cmdline.append(vcodec)
+    if acodec:
+        cmdline.append("-acodec")
+        cmdline.append(acodec)
+    cmdline.append("-strict")
+    cmdline.append("experimental")
+    cmdline.append("-preset")
+    cmdline.append("ultrafast")
+    cmdline.append("-movflags")
+    cmdline.append("empty_moov+faststart+frag_keyframe") # +
+    cmdline.append("pipe:1")
     print(" ".join(cmdline))
 
     FNULL = open(os.devnull, 'w')

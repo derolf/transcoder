@@ -1,5 +1,9 @@
 'use strict';
 
+$(function() {
+	browser.init();
+});
+
 var tplBrowse;
 
 var browser = {
@@ -80,6 +84,10 @@ var browser = {
         }).fail(function() {
             that.go("");
         });
+    },
+
+    init : function() {
+        browser.go(localStorage.getItem("browse.url") || "");
     }
 }
 
@@ -87,6 +95,3 @@ $.get("tpl/browse.html").success(function(data) {
 	tplBrowse = Handlebars.compile(data);
 });
 
-$(function() {
-	browser.go(localStorage.getItem("browse.url") || "");
-});

@@ -15,8 +15,6 @@ root_items=		[ { "name": "Eltern", "target": "Shared Videos/Videos/Eltern" }, { 
 #transcoder=	"http://192.168.178.52:8123/media/"
 #transcoder=	"http://192.168.178.51:8123/media/"
 #transcoder=		"http://192.168.178.63:8124/media/"
-transcoder=		"/media/"
-transcoderMac=	"abc"
 
 # transcoder config
 

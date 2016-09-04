@@ -25,18 +25,20 @@ def init(app):
         except IOError:
             abort(404)
 
-    @app.route('/media/<path:path>.tc')
-    def media_content_tc(path):
+    @app.route('/media/<path:path>.<regex("\w+"):format>')
+    def media_content_tc(path, format):
         start = float(request.args.get("start") or 0)
+        vcodec = request.args.get("vcodec")
+        acodec = request.args.get("acodec")
         try:
-            mime = L.transcodeMime(path)
-            return Response(response=L.transcode(path, start), status=200, mimetype=mime,
+            mime = L.transcodeMime(format)
+            return Response(response=L.transcode(path, start, format, vcodec, acodec), status=200, mimetype=mime,
                             headers={'Access-Control-Allow-Origin': '*', "Content-Type": mime,
                                      "Content-Disposition": "inline", "Content-Transfer-Enconding": "binary"})
         except FileNotFoundError:
             abort(404)
 
-    @app.route('/media/<path:path>.icon')
+    @app.route('/icon/<path:path>.jpg')
     def media_content_icon(path):
         try:
             return Response(response=L.icon(path), status=200, mimetype='image/jpg',
