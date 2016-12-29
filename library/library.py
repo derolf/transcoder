@@ -1,6 +1,5 @@
 cacheVersion = 4
 
-from awake import wol
 import threading
 import os, subprocess, re
 import config

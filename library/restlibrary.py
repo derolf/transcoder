@@ -1,6 +1,5 @@
 from flask import jsonify, request, Response, abort
 import library as L
-from awake import wol
 import json
 
 try:
@@ -12,10 +11,6 @@ except NameError:
 
 def init(app):
     L.init()
-
-    @app.route('/wakeTranscoder')
-    def wakeTranscoder():
-        wol.send_magic_packet(C.transcoderMac)
 
     @app.route("/library/", defaults={"path": ""})
     @app.route("/library/<path:path>")

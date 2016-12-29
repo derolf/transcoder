@@ -1,5 +1,4 @@
 from flask import Flask, request, Response, abort, send_file, jsonify
-from awake import wol
 import os, subprocess, re
 import config as C
 import library as L
