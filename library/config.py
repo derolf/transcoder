@@ -5,8 +5,8 @@ port= 			8124
 media_folder= 	"/mnt/stuff/Public/"
 root_items=		[ { "name": "Eltern", "target": "Shared Videos/Videos/Eltern" }, { "name": "Kinder", "target": "Shared Videos/Videos/Kinder" }, { "name": "Music", "target": "Shared Music" }, {"name": "Test Music", "target": "/home/daniel/Music"}, {"name": "Test Video", "target": "/home/daniel/TEST"} ]
 
-#media_folder= 	"/mnt/Public/"
-#root_items=		[ { "name": "Eltern", "target": "Shared Videos/Videos/Eltern" }, { "name": "Kinder", "target": "Shared Videos/Videos/Kinder" }, { "name": "Music", "target": "Shared Music" } ]
+media_folder= 	"/mnt/Public/"
+root_items=		[ { "name": "Eltern", "target": "Shared Videos/Videos/Eltern" }, { "name": "Aufnahmen", "target": "Shared Videos/Aufnahmen2" }, { "name": "Kinder", "target": "Shared Videos/Videos/Kinder" }, { "name": "Music", "target": "Shared Music" }, { "name": "Fotos", "target": "Shared Pictures" } ]
 
 
 # transcoder config

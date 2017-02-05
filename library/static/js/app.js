@@ -46,7 +46,6 @@ var keyboard = {
             $("#playlist").finish().fadeOut();
             $("#status").finish().fadeOut();
             $("#videoBox").removeClass("videoBoxSmall");
-            //$("#video").removeClass("videoSmall");
         } else {
             $("#status")[0].always = true;
             $("#playlist")[0].always = true;
@@ -55,7 +54,6 @@ var keyboard = {
             $("#playlist").finish().fadeIn();
             $("#status").finish().fadeIn();
             $("#videoBox").addClass("videoBoxSmall");
-            //$("#video").addClass("videoSmall");
         }
     },
 
