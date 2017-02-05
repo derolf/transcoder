@@ -156,7 +156,7 @@ var app = {
         var NNavi = loadObject('pluginObjectNNavi', 'clsid:SAMSUNG-INFOLINK-NNAVI');
         var TVMW = loadObject('pluginObjectTVMW', 'clsid:SAMSUNG-INFOLINK-TVMW');
 
-        NNavi.SetBannerState(2);
+        NNavi.SetBannerState(1);
 
         $.getScript("$MANAGER_WIDGET/Common/API/TVKeyValue.js", function() {
             console.log("$MANAGER_WIDGET/Common/API/TVKeyValue.js loaded");
