@@ -1,0 +1,8 @@
+"""Config file for media folder."""
+
+"""for usage rename to mediaconf.py"""
+
+media_folder = "/media/hdd1/TV"
+root_items = [{"name": "The-Flash", "target": "/media/hdd1/TV/The-Flash"},
+              {"name": "Test", "target": "/home/alexander/tmp/test-media"},
+              {"name": "TBBT", "target": "/media/hdd1/TV/The-Big-Bang-Theory"}]

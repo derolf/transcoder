@@ -13,6 +13,7 @@ def parentPath(path):
 
 
 def init(app):
+    """Init web client page."""
     @app.route("/", defaults={"path": "index.html"})
     @app.route("/<path:path>")
     def staticcontent(path):

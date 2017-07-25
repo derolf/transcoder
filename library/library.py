@@ -1,23 +1,29 @@
-cacheVersion = 4
+"""Deals with metadata and icons."""
 
 import threading
-import os, subprocess, re
+import os
+import subprocess
+import re
 import config
+import mediaconf
 import hashlib
 import pickle
 import urllib
 import time
 from threading import Lock
 
-uniqueLock = Lock();
+cacheVersion = 4
+uniqueLock = Lock()
 counter = 0
 
 
 def utf8(s):
+    """Convert to UTF-8."""
     return s.encode("UTF-8")
 
 
 def unique():
+    """Return unique identification number."""
     global uniqueLock
     global counter
     with uniqueLock:
@@ -26,6 +32,7 @@ def unique():
 
 
 def mapPath(path):
+    """Map web path to file path."""
     # extract root folder
     path = os.path.normpath(path)
     path = path.split("/")
@@ -34,17 +41,18 @@ def mapPath(path):
 
     # map root folder
     base = None
-    for item in config.root_items:
+    for item in mediaconf.root_items:
         if item["name"] == root:
             base = item["target"]
             break
     if base is None:
         raise FileNotFoundError()
 
-    return os.path.join(config.media_folder, base + "/" + path if path != "" else base)
+    return os.path.join(mediaconf.media_folder, base + "/" + path if path != "" else base)
 
 
 def indexFile(path):
+    """Index File and creat metadata file."""
     d = mapPath(path)
     key = "cache/" + hashlib.md5(utf8(path)).hexdigest() + ".meta"
 
@@ -72,14 +80,15 @@ def indexFile(path):
 
 
 def extractFrameAsJPG(d, start):
+    """Return frame of video as jpeg."""
     cmdline = list()
     cmdline.append(config.ffmpeg)
     cmdline.append("-ss")
     cmdline.append(str(start))
     cmdline.append("-i")
-    cmdline.append(d);
+    cmdline.append(d)
     cmdline.append("-vframes")
-    cmdline.append("1");
+    cmdline.append("1")
     cmdline.extend(config.ffmpeg_poster_args)
     FNULL = open(os.devnull, 'w')
     proc = subprocess.Popen(cmdline, stdout=subprocess.PIPE, stderr=FNULL)
@@ -96,6 +105,7 @@ def extractFrameAsJPG(d, start):
 
 
 def icon(path):
+    """Read and yield chunks of icon file."""
     infile = iconFile(path)
     try:
         byte = infile.read(65536)
@@ -107,6 +117,7 @@ def icon(path):
 
 
 def iconFile(path):
+    """Read and create icon file."""
     key = "cache/" + hashlib.md5(utf8(path)).hexdigest() + ".icon"
 
     d = mapPath(path)
@@ -139,7 +150,6 @@ def iconFile(path):
                 # couldn't find any jpg, try the folders
                 for f in os.listdir(d):
                     if not os.path.isfile(f):
-                        empty = True
                         sub = iconFile(path + "/" + f)
                         if len(sub.peek(1)) > 0:
                             return sub
@@ -156,6 +166,7 @@ def iconFile(path):
 
 
 def libraryMeta(path, details):
+    """Provide meatadata for given path."""
     meta = dict()
 
     # handle root
@@ -187,12 +198,13 @@ def libraryMeta(path, details):
 
 
 def library(path):
+    """Wrapp for libraryMeta."""
     meta = libraryMeta(path, True)
 
     # handle root
     if path == "":
         items = []
-        for item in config.root_items:
+        for item in mediaconf.root_items:
             child = libraryMeta(item["name"], False)
             items.append(child)
         meta["items"] = items
@@ -210,17 +222,14 @@ def library(path):
 
     return meta
 
-  
-def getType(path):  
-    d = mapPath(path)
-
 
 def getDuration(path):
+    """Figure out duration of a media file using FFmpeg."""
     d = mapPath(path)
     cmdline = list()
     cmdline.append(config.ffmpeg)
     cmdline.append("-i")
-    cmdline.append(d);
+    cmdline.append(d)
     duration = -1
     FNULL = open(os.devnull, 'w')
     proc = subprocess.Popen(cmdline, stderr=subprocess.PIPE, stdout=FNULL)
@@ -238,23 +247,26 @@ def getDuration(path):
 
 
 def transcodeMime(format):
+    """Translate file format to Mime type."""
     return config.transcode_mime.get(format) or config.transcode_mime["*"]
 
 
 def transcode(path, start, format, vcodec, acodec):
+    """Transcode in ffmpeg subprocess."""
     d = mapPath(path)
-    dummy, ext = os.path.splitext(d)
+    _, ext = os.path.splitext(d)
     ext = ext[1:]
-    args = config.ffmpeg_transcode_args.get(ext) or config.ffmpeg_transcode_args["*"]
-    cmdline = list()
-    cmdline.append(config.ffmpeg)
-    cmdline.append("-ss")
-    cmdline.append(str(start))
-    cmdline.append("-i")
-    cmdline.append(d)
-    cmdline.append("-f")
-    cmdline.append(format)
-    if vcodec:
+    # args = config.ffmpeg_transcode_args.get(ext) or
+    args = config.ffmpeg_transcode_args["*"]
+
+    cmdline = config.ffmpeg + args.format(str(start), d, format, vcodec, acodec)
+
+    # TODO:
+    # make cmdline dynamic
+    # add -vn
+    # make acodec optional
+
+    """if vcodec:
         if vcodec == "none":
             cmdline.append("-vn")
         else:
@@ -263,17 +275,12 @@ def transcode(path, start, format, vcodec, acodec):
     if acodec:
         cmdline.append("-acodec")
         cmdline.append(acodec)
-    cmdline.append("-strict")
-    cmdline.append("experimental")
-    cmdline.append("-preset")
-    cmdline.append("ultrafast")
-    cmdline.append("-movflags")
-    cmdline.append("empty_moov+faststart+frag_keyframe") # +
-    cmdline.append("pipe:1")
-    print(" ".join(cmdline))
+    """
 
-    FNULL = open(os.devnull, 'w')
-    proc = subprocess.Popen(cmdline, stdout=subprocess.PIPE)#, stderr=FNULL)
+    print(cmdline)
+
+    # FNULL = open(os.devnull, 'w')
+    proc = subprocess.Popen(cmdline.split(), stdout=subprocess.PIPE)  # , stderr=FNULL)
     try:
         f = proc.stdout
         byte = f.read(65536)
@@ -285,23 +292,28 @@ def transcode(path, start, format, vcodec, acodec):
 
 
 def refreshLoop():
+    """Refresh library every hour."""
     def refresh(path):
+        """Refresh path (file and directories)."""
         iconFile(path).close()
         entry = library(path)
+
         if not entry["file"]:
+            # Recrusive indexing
             for child in entry["items"]:
                 refresh(child["path"])
 
     while True:
         print("Refreshing")
-        items = []
-        for item in config.root_items:
+        for item in mediaconf.root_items:
             refresh(item["name"])
         print("Refresh done")
 
         time.sleep(3600)
 
+
 def init():
+    """Start library loading in new thread."""
     t = threading.Thread(target=refreshLoop)
-    t.daemon = True # stop if the program exits
+    t.daemon = True  # stop if the program exits
     t.start()
